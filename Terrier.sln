@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29021.104
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Terrier", "src\Terrier\Terrier.csproj", "{10A8E141-5D6D-4D0D-9C2C-22BC27DB5878}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terrier.Core", "src\Terrier.Core\Terrier.Core.csproj", "{2CE1039F-F413-48FF-A020-F9A87F5A3E53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Terrier.Core", "src\Terrier.Core\Terrier.Core.csproj", "{2CE1039F-F413-48FF-A020-F9A87F5A3E53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "src\TestPlugin\TestPlugin.csproj", "{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2CE1039F-F413-48FF-A020-F9A87F5A3E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE1039F-F413-48FF-A020-F9A87F5A3E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE1039F-F413-48FF-A020-F9A87F5A3E53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

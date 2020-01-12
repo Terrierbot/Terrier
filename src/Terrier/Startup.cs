@@ -22,7 +22,7 @@ namespace Terrier
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        public IEnumerable<TerrierPlugin> Plugins { get; }
+        public PluginManager PluginManager { get; }
 
         public Startup(string[] args)
         {
@@ -31,6 +31,7 @@ namespace Terrier
              .SetBasePath(AppContext.BaseDirectory)
              .AddYamlFile(TerrierConstants.ConfigFileName);
             Configuration = builder.Build();
+            PluginManager = new PluginManager();
         }
 
         public static bool TryGenerateConfiguration()
@@ -81,46 +82,10 @@ namespace Terrier
             var builder = new CommandServiceBuilder<DiscordCommandContext>()
                 .AddCommandParser<DefaultCommandParser<DiscordCommandContext>>()
                 .AddTypeReaderFactory<NullTypeReaderFactory>();
-            LoadPlugins(services, builder);
+            PluginManager.LoadPlugins(services, builder);
 
+            services.AddSingleton(PluginManager);
             services.AddSingleton(builder.BuildCommandService());
-        }
-
-        private void LoadPlugins(IServiceCollection services, CommandServiceBuilder<DiscordCommandContext> builder)
-        {
-            var loaders = new List<PluginLoader>();
-
-            if (!Directory.Exists(TerrierConstants.PluginsDirectory))
-                Directory.CreateDirectory(TerrierConstants.PluginsDirectory);
-
-            foreach (var dir in Directory.GetDirectories(TerrierConstants.PluginsDirectory))
-            {
-                var dirName = Path.GetFileName(dir);
-                var pluginDll = Path.Combine(dir, dirName + ".dll");
-                if (File.Exists(pluginDll))
-                {
-                    var loader = PluginLoader.CreateFromAssemblyFile(pluginDll, TerrierConstants.SharedTypes);
-                    loaders.Add(loader);
-                }
-            }
-
-            var loadedPlugins = new List<TerrierPlugin>();
-            foreach (var loader in loaders)
-            {
-                var assembly = loader.LoadDefaultAssembly();
-                foreach (var pluginType in assembly.GetTypes()
-                    .Where(t => typeof(TerrierPlugin).IsAssignableFrom(t) && !t.IsAbstract))
-                {
-                    var plugin = (TerrierPlugin)Activator.CreateInstance(pluginType);
-                    plugin.OnEnable();
-                    plugin.ConfigureServices(services);
-
-                    builder.AddModules(assembly);
-
-                    loadedPlugins.Add(plugin);
-                    Console.WriteLine($"Enabled `{plugin.Name}`.");
-                }
-            }
         }
     }
 }

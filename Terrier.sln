@@ -7,7 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Terrier", "src\Terrier\Terr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Terrier.Core", "src\Terrier.Core\Terrier.Core.csproj", "{2CE1039F-F413-48FF-A020-F9A87F5A3E53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "src\TestPlugin\TestPlugin.csproj", "{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPlugin", "src\TestPlugin\TestPlugin.csproj", "{19F1A4E9-95B3-44D9-BC6E-EED867B83E43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B05AD17D-1947-4E10-B472-8BB9541F206E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		nuget.config = nuget.config
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

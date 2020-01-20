@@ -1,23 +1,21 @@
-﻿using Discord.WebSocket;
-using Finite.Commands;
+﻿using Discord.Commands;
+using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Terrier.Commands;
 
 namespace Terrier.Services
 {
     internal class InternalCommandHandlingService : ITerrierService
     {
         private readonly ILogger<InternalCommandHandlingService> _logger;
-        private readonly CommandService<DiscordCommandContext> _commandService;
+        private readonly CommandService _commandService;
         private readonly DiscordSocketClient _discordSocketClient;
         private readonly IServiceProvider _serviceProvider;
 
         public InternalCommandHandlingService(
             ILogger<InternalCommandHandlingService> logger,
-            CommandService<DiscordCommandContext> commandService,
+            CommandService commandService,
             DiscordSocketClient discordSocketClient,
             IServiceProvider serviceProvider)
         {
@@ -44,9 +42,26 @@ namespace Terrier.Services
             if (!(s is SocketUserMessage msg)) return;
             if (!(s.Channel is SocketGuildChannel)) return;
 
-            var context = new DiscordCommandContext(_discordSocketClient, msg);
+            int argPos = 0;
+            var context = new SocketCommandContext(_discordSocketClient, msg);
+            if (msg.HasMentionPrefix(_discordSocketClient.CurrentUser, ref argPos))
+            {
+                var result = await _commandService.ExecuteAsync(context, argPos, _serviceProvider);
+                if (result.IsSuccess) return;
 
-            var result = await _commandService.ExecuteAsync(context, _serviceProvider);
+                switch (result)
+                {
+                    case ExecuteResult execute:
+                        _logger.LogError(execute.Exception?.ToString());
+                        return;
+                    case ParseResult parse when parse.Error == CommandError.BadArgCount:
+                        // Send Help Text
+                        return;
+                    default:
+                        await context.Channel.SendMessageAsync(result.ErrorReason);
+                        return;
+                }
+            }
         }
     }
 }

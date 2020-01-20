@@ -7,7 +7,7 @@ namespace TestPlugin.Services
     {
         public string GetRandomString()
         {
-            return new Guid().ToString();
+            return Guid.NewGuid().ToString();
         }
 
         public void Start()

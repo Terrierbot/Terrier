@@ -1,17 +1,11 @@
-﻿using Discord.Addons.Finite.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
-using Finite.Commands;
-using Finite.Commands.Extensions;
-using McMaster.NETCore.Plugins;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading.Tasks;
-using Terrier.Commands;
 using Terrier.Config;
 using Terrier.Services;
 using YamlDotNet.Serialization;
@@ -40,6 +34,7 @@ namespace Terrier
 
             var serializer = new SerializerBuilder()
                 .WithNamingConvention(new UnderscoredNamingConvention())
+                .EmitDefaults()
                 .Build();
 
             var yaml = serializer.Serialize(new AppConfig());
@@ -52,6 +47,9 @@ namespace Terrier
             var services = new ServiceCollection();
             ConfigureServices(services);
             var provider = services.BuildServiceProvider();
+
+            var commandService = provider.GetRequiredService<CommandService>();
+            await commandService.AddModulesAsync(Assembly.GetExecutingAssembly(), provider);
 
             provider.GetRequiredService<StartupService>().Start();
             provider.GetRequiredService<InternalLoggingService>().Start();
@@ -79,13 +77,17 @@ namespace Terrier
             .AddSingleton<InternalCommandHandlingService>()
             .AddLogging();
 
-            var builder = new CommandServiceBuilder<DiscordCommandContext>()
-                .AddCommandParser<DefaultCommandParser<DiscordCommandContext>>()
-                .AddTypeReaderFactory<NullTypeReaderFactory>();
-            PluginManager.LoadPlugins(services, builder);
+            var commandService = new CommandService(new CommandServiceConfig
+            {
+                CaseSensitiveCommands = config.Commands.CaseSensitiveCommands,
+                DefaultRunMode = config.Commands.DefaultRunMode,
+                IgnoreExtraArgs = config.Commands.IgnoreExtraArgs,
+                LogLevel = config.Commands.LogLevel
+            });
+            PluginManager.LoadPlugins(services, commandService);
 
             services.AddSingleton(PluginManager);
-            services.AddSingleton(builder.BuildCommandService());
+            services.AddSingleton(commandService);
         }
     }
 }

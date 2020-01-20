@@ -3,14 +3,22 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Terrier</RootNamespace>
+    <Version>0.1.0</Version>
+    <Authors>Aux</Authors>
+    <Product />
+    <Company />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/Terrierbot/Terrier</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Terrierbot/Terrier</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>terrier bot discord commands plugins</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Colorful.Console" Version="1.2.10" />
-    <PackageReference Include="Discord.Addons.Finite.Commands" Version="0.2.0-dev-00001" />
+    <PackageReference Include="Discord.Net" Version="2.2.0-dev-20191226.1" />
     <PackageReference Include="Discord.Net.WebSocket" Version="2.2.0-dev-20191226.1" />
-    <PackageReference Include="Finite.Commands.Core" Version="0.2.0-dev-00001" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.1" />
   </ItemGroup>
 
 </Project>

@@ -20,10 +20,9 @@ namespace Terrier
 
         public static Type[] SharedTypes = new[]
         {
-            typeof(DiscordCommandContext),
             typeof(DiscordModuleBase),
-            typeof(NullTypeReaderFactory),
             typeof(AppConfig),
+            typeof(CommandConfig),
             typeof(DiscordConfig),
             typeof(LoggingConfig),
             typeof(BotLogger),

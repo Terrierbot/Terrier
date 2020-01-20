@@ -1,10 +1,9 @@
 ﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
-using Finite.Commands;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
-using Terrier.Commands;
 
 namespace Terrier.Services
 {
@@ -12,12 +11,12 @@ namespace Terrier.Services
     {
         private readonly ILoggerFactory _factory;
         private readonly DiscordSocketClient _discordSocketClient;
-        private readonly CommandService<DiscordCommandContext> _commandService;
+        private readonly CommandService _commandService;
 
         public InternalLoggingService(
             ILoggerFactory factory,
             DiscordSocketClient discordSocketClient,
-            CommandService<DiscordCommandContext> commandService)
+            CommandService commandService)
         {
             _factory = factory;
             _commandService = commandService;
@@ -26,6 +25,7 @@ namespace Terrier.Services
 
         public void Start()
         {
+            _commandService.Log += OnLogAsync;
             _discordSocketClient.Log += OnLogAsync;
         }
 
@@ -34,7 +34,7 @@ namespace Terrier.Services
 
         private Task OnLogAsync(LogMessage msg)
         {
-            var logger = _factory.CreateLogger("Discord.Net");
+            var logger = _factory.CreateLogger(msg.Source);
             string message = msg.Exception?.ToString() ?? msg.Message;
             switch (msg.Severity)
             {

@@ -1,12 +1,10 @@
-﻿using Finite.Commands;
-using Finite.Commands.Extensions;
+﻿using Discord.Commands;
 using McMaster.NETCore.Plugins;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Terrier.Commands;
 
 namespace Terrier.Services
 {
@@ -24,7 +22,7 @@ namespace Terrier.Services
             _services = new List<ITerrierService>();
         }
 
-        internal void LoadPlugins(IServiceCollection services, CommandServiceBuilder<DiscordCommandContext> builder)
+        internal void LoadPlugins(IServiceCollection services, CommandService commandService)
         {
             var loaders = new List<PluginLoader>();
 
@@ -50,10 +48,11 @@ namespace Terrier.Services
                     .Where(t => typeof(TerrierPlugin).IsAssignableFrom(t) && !t.IsAbstract))
                 {
                     var plugin = (TerrierPlugin)Activator.CreateInstance(pluginType);
+                    _plugins.Add(plugin);
                     plugin.OnEnable();
                     plugin.ConfigureServices(services);
 
-                    builder.AddModules(assembly);
+                    commandService.AddModulesAsync(assembly, services.BuildServiceProvider()).GetAwaiter().GetResult();
 
                     loadedPlugins.Add(plugin);
                     Console.WriteLine($"Enabled `{plugin.Name}`.");

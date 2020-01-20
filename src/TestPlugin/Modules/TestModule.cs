@@ -1,4 +1,4 @@
-﻿using Finite.Commands;
+﻿using Discord.Commands;
 using System.Threading.Tasks;
 using Terrier.Commands;
 using TestPlugin.Services;
@@ -15,8 +15,8 @@ namespace TestPlugin.Modules
         }
 
         [Command("say")]
-        public Task SayAsync(params string[] words)
-            => ReplyAsync(string.Join(" ", words));
+        public Task SayAsync([Remainder]string text)
+            => ReplyAsync(text);
 
         [Command("test")]
         public Task TestServiceAsync()

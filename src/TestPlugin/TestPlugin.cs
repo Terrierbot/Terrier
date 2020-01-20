@@ -6,7 +6,7 @@ namespace TestPlugin
 {
     public class TestPlugin : TerrierPlugin
     {
-        public override string Name => "TestPlugin";
+        public override string Name => "Test";
         public override string Description => "A plugin used for testing if everything is working.";
         public override string Version => ":)";
 
